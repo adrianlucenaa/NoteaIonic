@@ -14,6 +14,7 @@ import { getFirestore } from 'firebase/firestore';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { initializeApp } from 'firebase/app';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { IonicModule } from '@ionic/angular';
 // Call the element loader before the bootstrapModule/bootstrapApplication call
 defineCustomElements(window);
 if (environment.production) {
@@ -32,6 +33,7 @@ bootstrapApplication(AppComponent, {
                           AngularFirestoreModule, 
                           AngularFireModule.initializeApp(environment.firebaseConfig)
                         ]), //old
+    importProvidersFrom(IonicModule.forRoot({})), //for standalone
     provideRouter(routes),
   ],
 });
