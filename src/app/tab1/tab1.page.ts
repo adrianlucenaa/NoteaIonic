@@ -22,6 +22,7 @@ export class Tab1Page {
   private UIS = inject(UIService);
   public loadingS = inject(LoadingController);
   private myLoading!:HTMLIonLoadingElement;
+  private base64Image?: string;
   constructor() {
     this.form = this.formB.group({
       title:['',[Validators.required,Validators.minLength(4)]],
@@ -35,7 +36,10 @@ export class Tab1Page {
     let note:Note={
       title:this.form.get("title")?.value,
       description:this.form.get("description")?.value,
-      date:Date.now().toLocaleString()
+      date:Date.now().toLocaleString(),
+    }
+    if (this.base64Image !== undefined) {
+      note.img = this.base64Image;
     }
     await this.UIS.showLoading();
     try{
@@ -43,6 +47,7 @@ export class Tab1Page {
       this.form.reset();
       await this.UIS.showToast("Nota introducida correctamente","success");
     }catch(error){
+      console.log(error);
       await this.UIS.showToast("Error al insertar la nota","danger");
     }finally{
       await this.UIS.hideLoading();
@@ -51,16 +56,16 @@ export class Tab1Page {
 
   public async takePic(){
       const image = await Camera.getPhoto({
-        quality: 90,
+        quality: 60,
         allowEditing: true,
-        resultType: CameraResultType.Uri
+        resultType: CameraResultType.Base64
       });
     
       // image.webPath will contain a path that can be set as an image src.
       // You can access the original file using image.path, which can be
       // passed to the Filesystem API to read the raw data of the image,
       // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-      //var imageUrl = image.webPath;
+      this.base64Image = image.base64String;
     
       // Can be set to the src of an image now
       //imageElement.src = imageUrl;
