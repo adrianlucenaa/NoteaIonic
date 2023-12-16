@@ -17,6 +17,9 @@
       </ion-item-options>
   
       <ion-item>
+        <ion-thumbnail slot="start">
+          <img [src]="note.img">
+        </ion-thumbnail>
         <ion-label>{{note.title}}</ion-label>
         <p>{{note.description}}</p>
       </ion-item>
@@ -28,13 +31,5 @@
       </ion-item-options>
     </ion-item-sliding>
   }
-  </ion-list>
-  <ion-list>
-    <ion-item *ngFor="let note of noteS.notes$ | async">
-      <ion-thumbnail slot="start">
-        <img [src]="note.img">
-      </ion-thumbnail>
-      <ion-label>{{ note.title }}</ion-label>
-    </ion-item>
   </ion-list>
 </ion-content>
