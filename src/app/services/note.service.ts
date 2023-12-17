@@ -12,10 +12,35 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class NoteService {
+  getNotes(): Observable<Note[]> {
+    return this.notes$;
+  }
+
+  getMoreNotes(lastNote: Note): Observable<Note[]> {
+    return new Observable<Note[]>(observer => {
+      this.myCollection.ref.orderBy('key').startAfter(lastNote.key).limit(10).get().then(querySnapshot => {
+        const notes: Note[] = [];
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          const note: Note = {
+            key: doc.id,
+            title: data.title,
+            description: data.description,
+            date: data.date,
+            img: data.img,
+          };
+          notes.push(note);
+        });
+        observer.next(notes);
+      }).catch(error => {
+        observer.error(error);
+      });
+    });
+  }
   myCollection: AngularFirestoreCollection<any>;
   myCollection_new:any;
-  private fireStore: AngularFirestore = inject(AngularFirestore); //old
-  private fire: Firestore = inject(Firestore);  //new
+  private fireStore: AngularFirestore = inject(AngularFirestore); 
+  private fire: Firestore = inject(Firestore); 
   public notes$!:Observable<Note[]>;
 
   constructor() {

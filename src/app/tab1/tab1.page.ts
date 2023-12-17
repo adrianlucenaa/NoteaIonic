@@ -1,7 +1,6 @@
 import { Component,inject } from '@angular/core';
 import {IonicModule, LoadingController} from '@ionic/angular'
-  import {FormBuilder,FormGroup,FormsModule,
-  ReactiveFormsModule,Validators} from '@angular/forms';
+import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
 import { Note } from '../model/note';
 import { NoteService } from '../services/note.service';
 import { UIService } from '../services/ui.service';
@@ -61,13 +60,16 @@ export class Tab1Page {
         resultType: CameraResultType.Base64
       });
     
-      // image.webPath will contain a path that can be set as an image src.
-      // You can access the original file using image.path, which can be
-      // passed to the Filesystem API to read the raw data of the image,
-      // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-      this.base64Image = image.base64String;
-    
-      // Can be set to the src of an image now
-      //imageElement.src = imageUrl;
+      
+      await this.UIS.showLoading();
+      try {
+        this.base64Image = image.base64String;
+        await this.UIS.showToast('Imagen introducida correctamente', 'success');
+      } catch (error) {
+        console.log(error);
+        await this.UIS.showToast('Error al insertar la imagen', 'danger');
+      } finally {
+        await this.UIS.hideLoading();
+      }
   }
 }
