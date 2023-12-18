@@ -14,11 +14,11 @@
     <ion-item>
       <ion-textarea label="Description" formControlName="description"></ion-textarea>
     </ion-item>
-    <ion-item>
+    <ion-item > <span id="datetime" class="fecha"></span>
       <ion-datetime-button datetime="datetime"></ion-datetime-button>
       <ion-modal [keepContentsMounted]="true">
         <ng-template>
-          <ion-datetime id="datetime"></ion-datetime>
+          <ion-datetime id="daatetime"></ion-datetime>
         </ng-template>
       </ion-modal>
     </ion-item>

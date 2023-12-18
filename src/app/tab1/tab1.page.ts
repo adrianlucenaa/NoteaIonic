@@ -21,11 +21,12 @@ export class Tab1Page {
   private UIS = inject(UIService);
   public loadingS = inject(LoadingController);
   private myLoading!:HTMLIonLoadingElement;
-  private base64Image?: string;
+
   constructor() {
     this.form = this.formB.group({
       title:['',[Validators.required,Validators.minLength(4)]],
-      description:['']
+      description:[''],
+      img:[''],
     });
   }
 
@@ -36,10 +37,9 @@ export class Tab1Page {
       title:this.form.get("title")?.value,
       description:this.form.get("description")?.value,
       date:Date.now().toLocaleString(),
+      img:this.form.get("img")?.value,
     }
-    if (this.base64Image !== undefined) {
-      note.img = this.base64Image;
-    }
+   
     await this.UIS.showLoading();
     try{
       await this.noteS.addNote(note);
@@ -53,23 +53,46 @@ export class Tab1Page {
     }
   }
 
-  public async takePic(){
-      const image = await Camera.getPhoto({
-        quality: 60,
-        allowEditing: true,
-        resultType: CameraResultType.Base64
-      });
-    
-      
-      await this.UIS.showLoading();
-      try {
-        this.base64Image = image.base64String;
-        await this.UIS.showToast('Imagen introducida correctamente', 'success');
-      } catch (error) {
-        console.log(error);
-        await this.UIS.showToast('Error al insertar la imagen', 'danger');
-      } finally {
-        await this.UIS.hideLoading();
-      }
+  public async takePic() {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+
+    (image as any).webPath = image.webPath;
+
+    const base64Image = await this.convertToBase64((image as any).webPath);
+    this.form.get("img")?.setValue(base64Image);
+  }
+
+  private convertToBase64(webPath: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      const fileReader = new FileReader();
+
+      fileReader.onloadend = () => {
+        const base64Image = fileReader.result as string;
+        resolve(base64Image);
+      };
+
+      fileReader.onerror = () => {
+        reject(fileReader.error);
+      };
+
+      xhr.open('GET', webPath);
+      xhr.responseType = 'blob';
+
+      xhr.onload = () => {
+        const blob = xhr.response;
+        fileReader.readAsDataURL(blob);
+      };
+
+      xhr.onerror = () => {
+        reject(xhr.statusText);
+      };
+
+      xhr.send();
+    });
   }
 }

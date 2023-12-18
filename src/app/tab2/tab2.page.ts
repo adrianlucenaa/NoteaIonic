@@ -64,13 +64,31 @@ export class Tab2Page {
   }
 
 
-  loadNotes(fromFirst:boolean, event?:any){
-    if(fromFirst==false && this.lastNote==undefined){
-      this.isInfiniteScrollAvailable=false;
-      event.target.complete();
-      return;
-    } 
-    
+  loadNotes(fromFirst: boolean, event?: any) {
+    if (fromFirst) {
+      // Cargar las notas desde el principio
+      this.noteS.getNotes().subscribe((notes: Note[]) => {
+        this._notes$.next(notes);
+        if (event) {
+          event.target.complete();
+        }
+      });
+    } else if (this.lastNote) {
+      // Cargar más notas utilizando la última nota como referencia
+      this.noteS.getMoreNotes(this.lastNote).subscribe((notes: Note[]) => {
+        const currentNotes = this._notes$.getValue();
+        this._notes$.next([...currentNotes, ...notes]);
+        if (event) {
+          event.target.complete();
+        }
+      });
+    } else {
+      // No hay más notas disponibles
+      this.isInfiniteScrollAvailable = false;
+      if (event) {
+        event.target.complete();
+      }
+    }
   }
   private convertPromiseToObservableFromFirebase(promise: Promise<any>): Observable<Note[]> {
     return from(promise).pipe(
@@ -90,7 +108,7 @@ export class Tab2Page {
   }
   async deleteNote($event: Note) {
     const confirmAlert = await this.alertController.create({
-      header: 'Confirmar eliminación',
+      header: 'Confirmar Eliminación',
       message: '¿Estás seguro de que deseas eliminar esta nota?',
       buttons: [
         {
