@@ -15,11 +15,11 @@
     <ion-textarea [(ngModel)]="note.description" class="form-textarea"></ion-textarea>
   </ion-item>
 
-  <ion-button expand="full" (click)="saveChanges()" class="form-button">Save</ion-button>
-  <ion-button expand="full" (click)="close()" class="form-button">Close</ion-button>
   <ion-item>
     <ion-checkbox [(ngModel)]="img" justify="space-between">¿Quieres eliminar la imágen?</ion-checkbox>
   </ion-item>
-  <ion-button expand="block" (click)="showImage = !showImage">Ver imagen</ion-button>
+  <ion-button expand="full" (click)="saveChanges()" class="form-button">Save</ion-button>
+  <ion-button expand="full" (click)="close()" class="form-button">Close</ion-button>
+  
   <img *If="showImage && note.img" [src]="'data:image/jpeg;base64,' + note.img">
 </ion-content>
