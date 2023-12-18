@@ -1,0 +1,16 @@
+:root {
+    --main-color: #f39c12; 
+  }
+  
+  body {
+    background-color: #f8f8f8; 
+  }
+  
+  h1 {
+    color: var(--main-color); 
+  }
+  
+  button {
+    background-color: var(--main-color); 
+    color: #fff; 
+  }

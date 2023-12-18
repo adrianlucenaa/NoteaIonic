@@ -1,1 +1,18 @@
-
+/* Estilos para el área de las pestañas */
+ion-tabs {
+    --background: #ffffff; /* Color de fondo del área de las pestañas */
+  }
+  
+  ion-tab-button {
+    --color-selected: #00bcd4; /* Color de texto cuando está seleccionado */
+    --color: #333; /* Color de texto por defecto */
+  }
+  
+  ion-label {
+    font-size: 0.8em; /* Tamaño del texto de las etiquetas */
+  }
+  
+  ion-tab-bar {
+    --background: #ffffff; /* Color de fondo de la barra de pestañas */
+    --border-width: 0; /* Ancho del borde de la barra (si lo quieres eliminar) */
+  }
